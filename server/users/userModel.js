@@ -7,11 +7,9 @@ var UserSchema = new mongoose.Schema({
   questionSolved: [{
     qNumber: Number,
     solved: Boolean,
-    solution: String
+    solution: String, 
+    points: [Number, String]
   }]
-
-  
-
 });
 
 var User = mongoose.model('User', UserSchema);

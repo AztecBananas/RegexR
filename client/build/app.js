@@ -50,8 +50,9 @@
 	var DetailView = __webpack_require__(197);
 	var SignInView = __webpack_require__(198);
 	var SignUpView = __webpack_require__(199);
-	var TutorialView = __webpack_require__(200);
-	var SolutionView = __webpack_require__(201)
+	var TutorialView = __webpack_require__(201);
+	var SolutionView = __webpack_require__(202)
+	var LeaderBoardView = __webpack_require__(200);
 
 	var Router = __webpack_require__(158);
 	var RouteHandler = Router.RouteHandler;
@@ -133,9 +134,10 @@
 	    React.createElement(Route, {name: "tutorial", path: "/tutorial", handler: TutorialView}), 
 	    React.createElement(Route, {name: "question", path: "/question/:qNumber", handler: DetailView}), 
 	    React.createElement(Route, {name: "solution", path: "/solution/:qNumber", handler: SolutionView}), 
+	    React.createElement(Route, {name: "overview", path: "/profile", handler: OverView}), 
 	    React.createElement(Route, {name: "signin", path: "/signin", handler: SignInView}), 
 	    React.createElement(Route, {name: "signup", path: "/signup", handler: SignUpView}), 
-	    React.createElement(Route, {name: "overview", path: "/profile", handler: OverView}), 
+	    React.createElement(Route, {name: "leaderboard", path: "leaderboard", handler: LeaderBoardView}), 
 	    React.createElement(DefaultRoute, {name: "default", handler: OverView})
 	  )
 	);
@@ -24091,6 +24093,72 @@
 /* 200 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var React = __webpack_require__(1);
+	var Router = __webpack_require__(158);
+	var Navigation = Router.Navigation;
+	var Link = Router.Link;
+
+	var LeaderBoardView = React.createClass({displayName: "LeaderBoardView",
+		mixis: [Navigation],
+
+		getInitialState: function(){
+			return {
+				scores:  []
+			};
+		},
+
+		componentWillMount : function(callback){
+			var that = this;
+			$.ajax({
+				url:window.location.origin + '/leaderboard',
+				method: 'GET',
+				dataType: 'json',
+				success: function(data){
+					if(this.isMounted()){
+						that.setState({scores:data});
+					}
+				}.bind(this),
+				error: function(xhr, status, err){
+				  console.error(xhr, status, err.message);
+				}
+			});
+		},
+
+
+
+		render: function(){
+
+
+			//Scores should be returned as an array with each element being an object
+			//The object should hold the username and the score
+			var scores = this.state.scores.map(function(score){
+				return (
+					React.createElement("tr", {key: score.username, className: "question"}, 
+						React.createElement("td", null, React.createElement("b", null, score.username)), 
+						React.createElement("td", null, React.createElement("b", null, score.totalScore))
+					)
+				)
+			});
+
+			return (
+				React.createElement("div", null, 
+					React.createElement("h2", null, " Leaderboard "), 
+					React.createElement("table", {className: "questionContainer table table-hover"}, 
+						React.createElement("tbody", null, 
+							scores
+						)
+					)
+				)
+			)
+		}
+	});
+
+	module.exports = LeaderBoardView;
+
+/***/ },
+/* 201 */
+/***/ function(module, exports, __webpack_require__) {
+
 	var React = __webpack_require__(1); 
 
 	var Router = __webpack_require__(158);
@@ -24108,7 +24176,7 @@
 	module.exports = TutorialView;
 
 /***/ },
-/* 201 */
+/* 202 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);

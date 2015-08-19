@@ -6,6 +6,7 @@ var SignInView = require('./views/SignInView.jsx');
 var SignUpView = require('./views/SignUpView.jsx');
 var TutorialView = require('./views/RegexTutorialView.jsx');
 var SolutionView = require('./views/SolutionView.jsx')
+var LeaderBoardView = require('./views/LeaderBoardView.jsx');
 
 var Router = require('react-router');
 var RouteHandler = Router.RouteHandler;
@@ -87,9 +88,10 @@ var routes = (
     <Route name="tutorial" path="/tutorial" handler={TutorialView}/>
     <Route name="question" path="/question/:qNumber" handler={DetailView}/>
     <Route name="solution" path="/solution/:qNumber" handler={SolutionView}/>
-    <Route name="signin" path= "/signin" handler={SignInView}/>
-    <Route name="signup" path= "/signup" handler={SignUpView}/>
     <Route name="overview" path= "/profile" handler={OverView}/>
+    <Route name="signin" path= "/signin" handler = {SignInView}/>
+    <Route name="signup" path= "/signup" handler = {SignUpView}/>
+    <Route name="leaderboard" path= "leaderboard" handler= {LeaderBoardView}/>
     <DefaultRoute name="default" handler={OverView} />
   </Route>
 );

@@ -45,7 +45,7 @@ var signup = function(req, res){
 			var user = new User({
 				username: req.body[0],
 				password:hash,
-				points: 0
+				points:  Math.floor(Math.random()*1000)
 			});
 
 			user.save(function(err, result){
@@ -84,6 +84,13 @@ var getSolutions = function(req, res) {
 	})
 }
 
+var leaderboard = function(req, res){
+	User.find({}, function(err, data){
+		if(err) res.status(404).send();
+		console.log(data);
+		res.status(200).send(data);
+	}).sort({totalScore:-1}).limit(10);
+};
 
 
 
@@ -92,4 +99,5 @@ module.exports = {
 	signup: signup,
 	submitSolution: submitSolution,
 	getSolutions: getSolutions
+	leaderboard: leaderboard
 }
