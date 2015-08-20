@@ -46,7 +46,7 @@ var signup = function(req, res) {
       var user = new User({
         username: req.body[0],
         password: hash,
-        points: Math.floor(Math.random() * 1000),
+        points: 0,
         questionSolved: []
       });
       user.save(function(err, result) {
@@ -67,7 +67,8 @@ var submitSolution = function(req, res) {
           "qNumber": req.body.qNumber,
           "solved": true,
           "solution": req.body.solution,
-          "time": req.body.time
+          "time": req.body.time,
+          "points": req.body.points
         }
       },
       $inc: {

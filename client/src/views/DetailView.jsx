@@ -13,7 +13,8 @@ var DetailView = React.createClass({
       result: '',
       solved: false,
       hintNo: -1, 
-      showHint: false
+      showHint: false,
+      reset: false
     };
   },
 
@@ -41,7 +42,7 @@ var DetailView = React.createClass({
     var hint = question['hints'][hNumber] || question['hints'][question['hints'].length - 1]
     
     return (
-     <p key={hint} className='displayedHint'>{hint}</p>
+     <span key={hint} className='displayedHint'>{hint}</span>
     )
 
   },
@@ -96,19 +97,29 @@ var DetailView = React.createClass({
     }
   },
 
-  onTimeChange: function(newTime) {
-          this.setState({ time: newTime });
-      },
+  onTimeChange: function(newTime, pointDecrement, reset) {
+    this.setState({
+      time: newTime,
+      pointDecrement: pointDecrement,
+      reset: reset
+    });
+  },
+
+  onReset: function() {
+    this.setState({
+      reset: true
+    });
+  },
+
   handleSubmit: function(e) {
     e.preventDefault();
     $(React.findDOMNode(this.refs.submitButton)).prop('disabled', true)
     var solution = React.findDOMNode(this.refs.solutionText).value;
     var question = this.props.questions[this.props.params.qNumber - 1];
-    console.log(this.state.time);
     var data = {
       "qNumber": question.qNumber,
-      "points": question.points,
-      "solution":  solution,
+      "points": question.points - this.state.pointDecrement,
+      "solution": solution,
       "time": this.state.time
     }
 
@@ -162,14 +173,14 @@ var DetailView = React.createClass({
             </div>
             <div className="col-lg-2">
               <Link to="questions" className="btn btn-primary back">Back</Link>
-              {!hasSolvedNextQuestion ? <Link to="question" params={{qNumber:nextQuestion}} className="btn btn-primary">Next Question</Link>: <Link to="solution" params={{qNumber:nextQuestion}} className="btn btn-success">Next Solution</Link>}
+              {!hasSolvedNextQuestion ? <Link to="question" onClick={this.onReset} params={{qNumber:nextQuestion}} className="btn btn-primary">Next Question</Link>: <Link to="solution" params={{qNumber:nextQuestion}} className="btn btn-success">Next Solution</Link>}
             </div>
           </div>
 
           <div className="row">
             <div className="col-lg-12"> 
-              <p>{question.description}</p>
-              <Timer stop={this.state.solved} callbackParent={this.onTimeChange}/>
+              <p onChange={this.onRefresh}>{question.description}</p>
+              <Timer stop={this.state.solved} reset={this.state.reset} callbackParent={this.onTimeChange}/>
             </div>
           </div>
 
@@ -178,12 +189,13 @@ var DetailView = React.createClass({
                 {this.state.solved ? <p><button ref="submitButton" className="btn btn-success">{'Submit Solution'}</button></p> : null}
                 {this.state.solved === null ? <p className="error-msg">Please provide valid regular expression</p> : null}
                 {this.state.solved ? <h3 className="success">Success!!! Solved All Test Cases!</h3> : null}
+                {this.state.pointDecrement ? <h3 className="points">-{this.state.pointDecrement} was detected due to time elapsed</h3> : null}
             </form>
 
             <div className="text-center"> 
               <div className='btn btn-primary hints' onClick={this.countHint}>Hint</div>
               <p></p>
-              {this.state.showHint ? this.displayHint() : null}
+              <p>{this.state.showHint ? this.displayHint() : null}</p>
             </div>
 
             <div className="test-cases">
@@ -210,20 +222,30 @@ var Timer = React.createClass({
   getInitialState: function() {
     return {
       secondsElapsed: 0,
-      time: '00:00'
+      time: '00:00',
+      pointDecrement: 0
     };
   },
   tick: function() {
+    
     if(this.props.stop === true) {
-      clearInterval(this.interval);  
+      clearInterval(this.interval);
+    } else if (this.props.reset === true) {
+      this.setState({
+        secondsElapsed: 0,
+        time: '00:00',
+        pointDecrement: 0
+      });
+      this.props.callbackParent('00:00', 0, false);
     } else {
       this.setState({
         secondsElapsed: this.state.secondsElapsed + 1
       });
       this.setState({
-        time: this.stringifyTime(this.state.secondsElapsed)
+        time: this.stringifyTime(this.state.secondsElapsed),
+        pointDecrement: Math.floor(this.state.secondsElapsed / 60)
       });
-      this.props.callbackParent(this.state.time); // notify detailView that there is a change in time
+      this.props.callbackParent(this.state.time, this.state.pointDecrement); // notify detailView that there is a change in time
     }
   },
   stringifyTime: function(seconds) {

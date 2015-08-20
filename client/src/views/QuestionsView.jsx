@@ -37,7 +37,7 @@ var QuestionsView = React.createClass({
           <tr key={question.qNumber} className="question">
             <td><b>{question.title}</b></td>
             <td><p>{question.description}</p></td>
-            <td><p className="points">Points:{question.points}</p></td>
+            <td><p className="points">Max Points:{question.points}</p></td>
             {solvedArray[index] ? <td><Link to="solution" params={{qNumber:question.qNumber}} className="btn btn-success">Complete</Link></td> : <td><Link to="question" params={{qNumber:question.qNumber}} className="btn btn-primary">Solve</Link></td>}
           </tr>
         )

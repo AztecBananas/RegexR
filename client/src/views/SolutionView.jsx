@@ -104,6 +104,7 @@ var SolutionView = React.createClass({
             <td><p>User: {user.username}</p></td>
             <td><p>Solution: {user.questionSolved.solution}</p></td>
             <td><p>Time Elasped: {user.questionSolved.time}</p></td>
+            <td><p>Points Awarded: {user.questionSolved.points}</p></td>
             <td><p>Votes: {user.questionSolved.votes}</p></td>
             <td><p><button onClick={this.upVote.bind(this, index)} ref={index} className="btn btn-primary">Vote</button></p></td>
           </tr>
