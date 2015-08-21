@@ -2,9 +2,9 @@ var React = require('react');
 
 var Router = require('react-router');
 var Navigation = Router.Navigation;
-
-
 var Link = Router.Link;
+
+var cookie = require('react-cookie');
 
 var SignUpView = React.createClass({
 	mixins: [Navigation],
@@ -28,7 +28,9 @@ var SignUpView = React.createClass({
 			contentType: "application/json",
 			dataType: 'json',
 			success: function(data){
-				that.transitionTo('signin');
+			  cookie.save('username', username);
+			 	that.props.logStatus();
+				that.transitionTo('questions');
 			},
 			error: function(xhr, status, err){
 				alert( xhr.responseText);
@@ -53,7 +55,6 @@ var SignUpView = React.createClass({
 				    <label className="col-sm-2 control-label">Username</label>
 				    <div className="col-sm-10">
 				      <input ref="username" className="form-control" placeholder="Username"/>
-
 				    </div>
 				  </div>
 				  <div className="form-group">
