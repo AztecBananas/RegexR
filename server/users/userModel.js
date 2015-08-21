@@ -1,7 +1,10 @@
 var mongoose = require('mongoose');
 
 var UserSchema = new mongoose.Schema({
-  username: {type: String, unique: true},
+  username: {
+    type: String,
+    unique: true
+  },
   password: String,
   points: Number,
   questionSolved: [{
@@ -11,10 +14,10 @@ var UserSchema = new mongoose.Schema({
     points: [Number, String],
     votes: Number,
     time: String
+
   }]
 });
 
 var User = mongoose.model('User', UserSchema);
 
 module.exports = User;
-

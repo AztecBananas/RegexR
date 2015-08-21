@@ -1,5 +1,5 @@
 var bodyParser = require('body-parser');
-var cookieParser = require('cookie-parser')
+var cookieParser = require('cookie-parser');
 var express = require('express');
 var morgan = require('morgan');
 var userRoutes = require('../users/userRoutes');
@@ -21,4 +21,3 @@ module.exports = function(app) {
   userRoutes(app);
   questionRoutes(app);
 };
-

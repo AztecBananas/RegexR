@@ -20,7 +20,8 @@ var LeaderBoardView = React.createClass({
 			dataType: 'json',
 			success: function(data){
 				if(this.isMounted()){
-					that.setState({scores:data});
+					that.setState({data:data});
+					that.setState({scores:data.points});
 				}
 			}.bind(this),
 			error: function(xhr, status, err){
@@ -29,6 +30,12 @@ var LeaderBoardView = React.createClass({
 		});
 	},
 
+
+
+	handleChange: function(e){
+		var selected = React.findDOMNode(this.refs.leaderDrop).value;
+		this.setState({scores:this.state.data[selected]});
+	},
 	render: function(){
 		//Scores should be returned as an array with each element being an object
 		//The object should hold the username and the score
@@ -40,6 +47,8 @@ var LeaderBoardView = React.createClass({
 					<td><b>{counter}</b></td>
 					<td><b>{score.username}</b></td>
 					<td><b>{score.points}</b></td>
+					<td><b>{score.questionsSolved}</b></td>
+					<td><b>{score.totalVotes}</b></td>
 				</tr>
 			)
 		});
@@ -49,8 +58,22 @@ var LeaderBoardView = React.createClass({
 			<div id='page-content-wrapper'>
         <div className='container-fluid'>
 				<h2> Leaderboard </h2>
+			
+
+				<select ref="leaderDrop"  onChange = {this.handleChange} >
+					  <option  value = "points">Points</option>
+		  			<option  value = "upvotes">Upvotes</option>
+		  			<option  value = "solved">Solved</option>
+				</select>
+
 				<table className = "questionContainer table table-hover">
 					<tbody>
+						<tr >
+							<td><b>Username</b></td>
+							<td><b>Points</b></td>
+							<td><b>Questions Solved</b></td>
+							<td><b>Upvotes</b></td>
+						</tr>
 						{scores}
 					</tbody>
 				</table> 

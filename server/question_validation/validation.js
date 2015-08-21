@@ -1,7 +1,7 @@
 var validate = function(regexString, truthy, falsy) {
   var regex = new RegExp(regexString);
 
-  console.log("REGEX:",regexString)
+  console.log("REGEX:", regexString);
 
   var error = function(value, expected) {
     return 'Expected ' + value + ' to be ' + String(expected) + ' instead of ' + String(!expected) + '!';
@@ -13,14 +13,14 @@ var validate = function(regexString, truthy, falsy) {
     }
   }
 
-  for (var i = 0; i < falsy.length; i++) {
-    if (regex.test(falsy[i]) === true) {
-      return error(falsy[i], false);
+  for (var j = 0; j < falsy.length; j++) {
+    if (regex.test(falsy[j]) === true) {
+      return error(falsy[j], false);
     }
   }
 
-  return "Success! All test cases passed!"
-}
+  return "Success! All test cases passed!";
+};
 
 module.exports = validate;
 
