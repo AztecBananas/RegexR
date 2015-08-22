@@ -90,9 +90,9 @@ var App = React.createClass({
         <div id='sidebar-wrapper'>
           <ul className='sidebar-nav'>
             <li className='sidebar-brand'>
-              <Link to='default'>/RegexR/</Link>
+              <Link to='default' className="logo">/RegexR/</Link>
             </li>
-            <li>Signed in as: {this.state.username}  </li>
+            <li><p className="signedIn">Signed in as: {this.state.username}</p></li>
             <li>
               <Link to='profile'>Profile</Link>
             </li>
@@ -106,7 +106,7 @@ var App = React.createClass({
               <Link to='tutorial'>Regex Cheatsheet</Link>
             </li>
              <li>
-              {this.state.loggedIn ? <Link onClick={this.onLogout} to='signin'>Logout</Link> : <Link to='signin'>Signin</Link> }
+              {this.state.loggedIn ? <Link onClick={this.onLogout} to='signin'>Logout</Link> : <Link to='signin'>Login</Link> }
             </li>
           </ul>
         </div>

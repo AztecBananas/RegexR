@@ -116,6 +116,7 @@ var SolutionView = React.createClass({
         if (this.state.userData.questionSolved[i].qNumber === question.qNumber) {
           solution = this.state.userData.questionSolved[i].solution;
           time = this.state.userData.questionSolved[i].time;
+          points = this.state.userData.questionSolved[i].points;
         }
       }
 
@@ -123,20 +124,25 @@ var SolutionView = React.createClass({
         <div id='page-content-wrapper'>
           <div className='container-fluid'>
             <div className="row">
-              <div className="col-sm-10">
-                <h2>{question.title} <span className="points">Points: {question.points}</span></h2>
+              <div className="col-md-9">
+                <h2>{question.title} <span className="points">Max Points: {question.points}</span></h2>
                 <p>{question.description}</p>
               </div>
-              <div className="col-sm-2">
-                <Link to="questions" className="btn btn-primary back">Back</Link>
-                {!hasSolvedNextQuestion ? <Link to="question" params={{qNumber:nextQuestion}} className="btn btn-primary">Next Question</Link>: <Link to="solution" params={{qNumber:nextQuestion}} className="btn btn-success">Next Solution</Link>}
+              <div className="col-md-3">
+                <div className="btn-group" role="group">
+                  <Link to="questions" className="btn btn-default back">Back</Link>
+                  {!hasSolvedNextQuestion ? <Link to="question" params={{qNumber:nextQuestion}} className="btn btn-primary">Next Question</Link>: <Link to="solution" params={{qNumber:nextQuestion}} className="btn btn-success">Next Solution</Link>}
+                </div>
               </div>
-       
-              <div className="col-sm-12">
-                <h4>Your Solution:</h4>
-                <p>{solution}</p>
-                <p>Time Elapsed: <span className="time">{time}</span></p>
-                <h4>Other solutions:</h4>
+              
+              <div className="col-md-12" >
+                <div className="solution">
+                  <h4>Your Solution:</h4>
+                  <h2 className="soln">{solution}</h2>
+                  <p>Time Elapsed: <span className="time">{time}</span></p>
+                  <p>Points awarded: <span className="time">{points}</span></p>
+                </div>
+                <h4>Other Solutions:</h4>
                 <table className="questionContainer table table-hover">
                   <tbody>
                     {solutions}

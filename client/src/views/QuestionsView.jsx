@@ -35,9 +35,9 @@ var QuestionsView = React.createClass({
       var questions = this.props.questions.map(function(question, index) {
         return (
           <tr key={question.qNumber} className="question">
-            <td><b>{question.title}</b></td>
-            <td><p>{question.description}</p></td>
-            <td><p className="points">Max Points:{question.points}</p></td>
+            <td className="col-md-2"><b>{question.title}</b></td>
+            <td className="col-md-8"><p>{question.description}</p></td>
+            <td className="col-md-2"><p className="points">Max Points: {question.points}</p></td>
             {solvedArray[index] ? <td><Link to="solution" params={{qNumber:question.qNumber}} className="btn btn-success">Complete</Link></td> : <td><Link to="question" params={{qNumber:question.qNumber}} className="btn btn-primary">Solve</Link></td>}
           </tr>
         )
@@ -46,8 +46,8 @@ var QuestionsView = React.createClass({
     return (
       <div id='page-content-wrapper'>
         <div className='container-fluid'>
-          <h2>Regex Puzzles</h2>
-          {!this.props.loggedIn ? <p>If you would like to save your scores, <Link to='signin'>log in!</Link></p> : null}
+          <h2>RegexR Challenges</h2>
+          {!this.props.loggedIn ? <p>If you would like to save your scores, <Link to='signin'>Login!</Link></p> : null}
           <table className="questionContainer table table-hover">
             <tbody>
               {questions}

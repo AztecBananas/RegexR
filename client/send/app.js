@@ -136,9 +136,9 @@
 	        React.createElement("div", {id: "sidebar-wrapper"}, 
 	          React.createElement("ul", {className: "sidebar-nav"}, 
 	            React.createElement("li", {className: "sidebar-brand"}, 
-	              React.createElement(Link, {to: "default"}, "/RegexR/")
+	              React.createElement(Link, {to: "default", className: "logo"}, "/RegexR/")
 	            ), 
-	            React.createElement("li", null, "Signed in as: ", this.state.username, "  "), 
+	            React.createElement("li", null, React.createElement("p", {className: "signedIn"}, "Signed in as: ", this.state.username)), 
 	            React.createElement("li", null, 
 	              React.createElement(Link, {to: "profile"}, "Profile")
 	            ), 
@@ -152,7 +152,7 @@
 	              React.createElement(Link, {to: "tutorial"}, "Regex Cheatsheet")
 	            ), 
 	             React.createElement("li", null, 
-	              this.state.loggedIn ? React.createElement(Link, {onClick: this.onLogout, to: "signin"}, "Logout") : React.createElement(Link, {to: "signin"}, "Signin")
+	              this.state.loggedIn ? React.createElement(Link, {onClick: this.onLogout, to: "signin"}, "Logout") : React.createElement(Link, {to: "signin"}, "Login")
 	            )
 	          )
 	        ), 
@@ -20604,9 +20604,9 @@
 	      var questions = this.props.questions.map(function(question, index) {
 	        return (
 	          React.createElement("tr", {key: question.qNumber, className: "question"}, 
-	            React.createElement("td", null, React.createElement("b", null, question.title)), 
-	            React.createElement("td", null, React.createElement("p", null, question.description)), 
-	            React.createElement("td", null, React.createElement("p", {className: "points"}, "Max Points:", question.points)), 
+	            React.createElement("td", {className: "col-md-2"}, React.createElement("b", null, question.title)), 
+	            React.createElement("td", {className: "col-md-8"}, React.createElement("p", null, question.description)), 
+	            React.createElement("td", {className: "col-md-2"}, React.createElement("p", {className: "points"}, "Max Points: ", question.points)), 
 	            solvedArray[index] ? React.createElement("td", null, React.createElement(Link, {to: "solution", params: {qNumber:question.qNumber}, className: "btn btn-success"}, "Complete")) : React.createElement("td", null, React.createElement(Link, {to: "question", params: {qNumber:question.qNumber}, className: "btn btn-primary"}, "Solve"))
 	          )
 	        )
@@ -20615,8 +20615,8 @@
 	    return (
 	      React.createElement("div", {id: "page-content-wrapper"}, 
 	        React.createElement("div", {className: "container-fluid"}, 
-	          React.createElement("h2", null, "Regex Puzzles"), 
-	          !this.props.loggedIn ? React.createElement("p", null, "If you would like to save your scores, ", React.createElement(Link, {to: "signin"}, "log in!")) : null, 
+	          React.createElement("h2", null, "RegexR Challenges"), 
+	          !this.props.loggedIn ? React.createElement("p", null, "If you would like to save your scores, ", React.createElement(Link, {to: "signin"}, "Login!")) : null, 
 	          React.createElement("table", {className: "questionContainer table table-hover"}, 
 	            React.createElement("tbody", null, 
 	              questions
@@ -23857,7 +23857,11 @@
 
 	  onReset: function() {
 	    this.setState({
-	      reset: true
+	      reset: true,
+	      result: '',
+	      solved: false,
+	      hintNo: -1, 
+	      showHint: false,
 	    });
 	  },
 
@@ -23868,7 +23872,7 @@
 	    var question = this.props.questions[this.props.params.qNumber - 1];
 	    var data = {
 	      "qNumber": question.qNumber,
-	      "points": question.points - this.state.pointDecrement,
+	      "points": question.points - (this.state.pointDecrement < question.points-1 || question.points - 1),
 	      "solution": solution,
 	      "time": this.state.time
 	    }
@@ -23918,47 +23922,50 @@
 	      React.createElement("div", {id: "page-content-wrapper"}, 
 	        React.createElement("div", {className: "container-fluid"}, 
 	          React.createElement("div", {className: "row"}, 
-	            React.createElement("div", {className: "col-lg-10"}, 
-	              React.createElement("h2", null, question.title, React.createElement("span", {className: "points"}, "Points: ", question.points))
+	            React.createElement("div", {className: "col-lg-9"}, 
+	              React.createElement("h2", null, question.title, React.createElement("span", {className: "points"}, "Max Points: ", question.points))
 	            ), 
-	            React.createElement("div", {className: "col-lg-2"}, 
-	              React.createElement(Link, {to: "questions", className: "btn btn-primary back"}, "Back"), 
-	              !hasSolvedNextQuestion ? React.createElement(Link, {to: "question", onClick: this.onReset, params: {qNumber:nextQuestion}, className: "btn btn-primary"}, "Next Question"): React.createElement(Link, {to: "solution", params: {qNumber:nextQuestion}, className: "btn btn-success"}, "Next Solution")
+	            React.createElement("div", {className: "col-lg-3"}, 
+	              React.createElement("div", {className: "btn-group", role: "group"}, 
+	                React.createElement(Link, {to: "questions", className: "btn btn-default back"}, "Back"), 
+	                !hasSolvedNextQuestion ? React.createElement(Link, {to: "question", onClick: this.onReset, params: {qNumber:nextQuestion}, className: "btn btn-primary"}, "Next Question"): React.createElement(Link, {to: "solution", params: {qNumber:nextQuestion}, className: "btn btn-success"}, "Next Solution")
+	              )
 	            )
 	          ), 
 
 	          React.createElement("div", {className: "row"}, 
 	            React.createElement("div", {className: "col-lg-12"}, 
 	              React.createElement("p", {onChange: this.onRefresh}, question.description), 
-	              React.createElement(Timer, {stop: this.state.solved, reset: this.state.reset, callbackParent: this.onTimeChange})
+	              React.createElement(Timer, {stop: this.state.solved, reset: this.state.reset, callbackParent: this.onTimeChange}), 
+	              this.state.pointDecrement ? React.createElement("div", {className: "warning"}, "-", this.state.pointDecrement, " point deducted due to time elapsed") : null
 	            )
 	          ), 
 
 	            React.createElement("form", {className: "form-inline text-center", onSubmit: this.handleSubmit}, 
-	              React.createElement("span", {className: "solution"}, "/", React.createElement("textarea", {ref: "solutionText", onChange: this.setRegex, rows: "1", cols: "50", type: "text", className: "regex form-control", placeholder: "Regex solution..."}), "/"), 
+	              React.createElement("span", {className: "input"}, "/", React.createElement("textarea", {ref: "solutionText", onChange: this.setRegex, rows: "1", cols: "50", type: "text", className: "regex form-control", placeholder: "Regex solution..."}), "/"), 
 	                this.state.solved ? React.createElement("p", null, React.createElement("button", {ref: "submitButton", className: "btn btn-success"}, 'Submit Solution')) : null, 
 	                this.state.solved === null ? React.createElement("p", {className: "error-msg"}, "Please provide valid regular expression") : null, 
-	                this.state.solved ? React.createElement("h3", {className: "success"}, "Success!!! Solved All Test Cases!") : null, 
-	                this.state.pointDecrement ? React.createElement("h3", {className: "points"}, "-", this.state.pointDecrement, " was detected due to time elapsed") : null
+	                this.state.solved ? React.createElement("h3", {className: "success"}, "Success!!! Solved All Test Cases!") : null
 	            ), 
 
-	            React.createElement("div", {className: "text-center"}, 
-	              React.createElement("div", {className: "btn btn-primary hints", onClick: this.countHint}, "Hint"), 
-	              React.createElement("p", null), 
+	            React.createElement("div", {className: "hints text-center"}, 
+	              React.createElement("div", {className: "btn btn-info", onClick: this.countHint}, "Hint"), 
 	              React.createElement("p", null, this.state.showHint ? this.displayHint() : null)
 	            ), 
 
 	            React.createElement("div", {className: "test-cases"}, 
 
 	              React.createElement("p", {className: "instruction"}, 'Make all words turn green to complete the challenge'), 
-	              React.createElement("div", {className: "col-sm-6 text-center"}, 
+	              React.createElement("div", {className: "col-sm-2"}), 
+	              React.createElement("div", {className: "col-sm-4 text-center"}, 
 	                React.createElement("h3", null, 'Should match'), 
 	                this.displayTestCases('truthy', true)
 	              ), 
-	              React.createElement("div", {className: "col-sm-6 text-center"}, 
+	              React.createElement("div", {className: "col-sm-4 text-center"}, 
 	                React.createElement("h3", null, 'Should not match'), 
 	                this.displayTestCases('falsy', false)
-	              )
+	              ), 
+	              React.createElement("div", {className: "col-sm-2"})
 	            )
 	        )
 	      )
@@ -24595,6 +24602,7 @@
 	        if (this.state.userData.questionSolved[i].qNumber === question.qNumber) {
 	          solution = this.state.userData.questionSolved[i].solution;
 	          time = this.state.userData.questionSolved[i].time;
+	          points = this.state.userData.questionSolved[i].points;
 	        }
 	      }
 
@@ -24602,20 +24610,25 @@
 	        React.createElement("div", {id: "page-content-wrapper"}, 
 	          React.createElement("div", {className: "container-fluid"}, 
 	            React.createElement("div", {className: "row"}, 
-	              React.createElement("div", {className: "col-sm-10"}, 
-	                React.createElement("h2", null, question.title, " ", React.createElement("span", {className: "points"}, "Points: ", question.points)), 
+	              React.createElement("div", {className: "col-md-9"}, 
+	                React.createElement("h2", null, question.title, " ", React.createElement("span", {className: "points"}, "Max Points: ", question.points)), 
 	                React.createElement("p", null, question.description)
 	              ), 
-	              React.createElement("div", {className: "col-sm-2"}, 
-	                React.createElement(Link, {to: "questions", className: "btn btn-primary back"}, "Back"), 
-	                !hasSolvedNextQuestion ? React.createElement(Link, {to: "question", params: {qNumber:nextQuestion}, className: "btn btn-primary"}, "Next Question"): React.createElement(Link, {to: "solution", params: {qNumber:nextQuestion}, className: "btn btn-success"}, "Next Solution")
+	              React.createElement("div", {className: "col-md-3"}, 
+	                React.createElement("div", {className: "btn-group", role: "group"}, 
+	                  React.createElement(Link, {to: "questions", className: "btn btn-default back"}, "Back"), 
+	                  !hasSolvedNextQuestion ? React.createElement(Link, {to: "question", params: {qNumber:nextQuestion}, className: "btn btn-primary"}, "Next Question"): React.createElement(Link, {to: "solution", params: {qNumber:nextQuestion}, className: "btn btn-success"}, "Next Solution")
+	                )
 	              ), 
-	       
-	              React.createElement("div", {className: "col-sm-12"}, 
-	                React.createElement("h4", null, "Your Solution:"), 
-	                React.createElement("p", null, solution), 
-	                React.createElement("p", null, "Time Elapsed: ", React.createElement("span", {className: "time"}, time)), 
-	                React.createElement("h4", null, "Other solutions:"), 
+	              
+	              React.createElement("div", {className: "col-md-12"}, 
+	                React.createElement("div", {className: "solution"}, 
+	                  React.createElement("h4", null, "Your Solution:"), 
+	                  React.createElement("h2", {className: "soln"}, solution), 
+	                  React.createElement("p", null, "Time Elapsed: ", React.createElement("span", {className: "time"}, time)), 
+	                  React.createElement("p", null, "Points awarded: ", React.createElement("span", {className: "time"}, points))
+	                ), 
+	                React.createElement("h4", null, "Other Solutions:"), 
 	                React.createElement("table", {className: "questionContainer table table-hover"}, 
 	                  React.createElement("tbody", null, 
 	                    solutions
@@ -24685,11 +24698,11 @@
 				counter++;
 				return (
 					React.createElement("tr", {key: score.username, className: "question"}, 
-						React.createElement("td", null, React.createElement("b", null, counter)), 
-						React.createElement("td", null, React.createElement("b", null, score.username)), 
-						React.createElement("td", null, React.createElement("b", null, score.points)), 
-						React.createElement("td", null, React.createElement("b", null, score.questionsSolved)), 
-						React.createElement("td", null, React.createElement("b", null, score.totalVotes))
+						React.createElement("td", {className: "col-md-1 text-center"}, React.createElement("b", null, counter)), 
+						React.createElement("td", {className: "col-md-2 text-center"}, score.username), 
+						React.createElement("td", {className: "col-md-2 text-center"}, score.points), 
+						React.createElement("td", {className: "col-md-2 text-center"}, score.questionsSolved), 
+						React.createElement("td", {className: "col-md-2 text-center"}, score.totalVotes)
 					)
 				)
 			});
@@ -24700,20 +24713,27 @@
 	        React.createElement("div", {className: "container-fluid"}, 
 					React.createElement("h2", null, " Leaderboard "), 
 				
-
-					React.createElement("select", {ref: "leaderDrop", onChange: this.handleChange}, 
-						  React.createElement("option", {value: "points"}, "Points"), 
-			  			React.createElement("option", {value: "upvotes"}, "Upvotes"), 
-			  			React.createElement("option", {value: "solved"}, "Solved")
+					React.createElement("div", {className: "btn-group"}, 
+					  React.createElement("button", {type: "button", className: "btn btn-default"}, "Filter By:"), 
+					  React.createElement("button", {type: "button", className: "btn btn-default dropdown-toggle", "data-toggle": "dropdown"}, 
+					    React.createElement("span", {className: "caret"}), 
+					    React.createElement("span", {className: "sr-only"}, "Toggle Dropdown")
+					  ), 
+					  React.createElement("ul", {className: "dropdown-menu", ref: "leaderDrop", onChange: this.handleChange}, 
+					    React.createElement("li", {value: "points"}, "Points"), 
+					    React.createElement("li", {value: "upvotes"}, "Upvotes"), 
+					    React.createElement("li", {value: "solved"}, "Number Solved")
+					  )
 					), 
-
+					
 					React.createElement("table", {className: "questionContainer table table-hover"}, 
 						React.createElement("tbody", null, 
 							React.createElement("tr", null, 
-								React.createElement("td", null, React.createElement("b", null, "Username")), 
-								React.createElement("td", null, React.createElement("b", null, "Points")), 
-								React.createElement("td", null, React.createElement("b", null, "Questions Solved")), 
-								React.createElement("td", null, React.createElement("b", null, "Upvotes"))
+								React.createElement("th", null), 
+								React.createElement("th", {className: "text-center"}, "Username"), 
+								React.createElement("th", {className: "text-center"}, "Points"), 
+								React.createElement("th", {className: "text-center"}, "Questions Solved"), 
+								React.createElement("th", {className: "text-center"}, "Upvotes")
 							), 
 							scores
 						)
@@ -24780,10 +24800,10 @@
 	        var questionTitle = this.props.questions[index.qNumber -1].title
 	        return ( 
 	            React.createElement("tr", null, 
-	              React.createElement("td", null, questionTitle), 
-	              React.createElement("td", null, index.solution), 
-	              React.createElement("td", null, index.time), 
-	              React.createElement("td", null, index.votes)
+	              React.createElement("td", {className: "col-md-3 text-padding"}, questionTitle), 
+	              React.createElement("td", {className: "col-md-3 text-padding"}, index.solution), 
+	              React.createElement("td", {className: "col-md-3 text-center"}, index.time), 
+	              React.createElement("td", {className: "col-md-3 text-center"}, index.votes)
 	            )
 	          )
 
@@ -24796,10 +24816,10 @@
 	          React.createElement("table", {className: "questionContainer table table-hover"}, 
 	          React.createElement("thead", null, 
 	            React.createElement("tr", null, 
-	              React.createElement("th", null, "Question"), 
-	              React.createElement("th", null, "Solution"), 
-	              React.createElement("th", null, "Time Elasped"), 
-	              React.createElement("th", null, "Votes")
+	              React.createElement("th", {className: "text-center"}, "Question"), 
+	              React.createElement("th", {className: "text-center"}, "Solution"), 
+	              React.createElement("th", {className: "text-center"}, "Time Elasped"), 
+	              React.createElement("th", {className: "text-center"}, "Votes")
 	            )
 	          ), 
 	            React.createElement("tbody", null, 
