@@ -24688,6 +24688,7 @@
 
 		handleChange: function(e){
 			var selected = React.findDOMNode(this.refs.leaderDrop).value;
+			console.log(selected);
 			this.setState({scores:this.state.data[selected]});
 		},
 		render: function(){
@@ -24712,20 +24713,13 @@
 				React.createElement("div", {id: "page-content-wrapper"}, 
 	        React.createElement("div", {className: "container-fluid"}, 
 					React.createElement("h2", null, " Leaderboard "), 
-				
-					React.createElement("div", {className: "btn-group"}, 
-					  React.createElement("button", {type: "button", className: "btn btn-default"}, "Filter By:"), 
-					  React.createElement("button", {type: "button", className: "btn btn-default dropdown-toggle", "data-toggle": "dropdown"}, 
-					    React.createElement("span", {className: "caret"}), 
-					    React.createElement("span", {className: "sr-only"}, "Toggle Dropdown")
-					  ), 
-					  React.createElement("ul", {className: "dropdown-menu", ref: "leaderDrop", onChange: this.handleChange}, 
-					    React.createElement("li", {value: "points"}, "Points"), 
-					    React.createElement("li", {value: "upvotes"}, "Upvotes"), 
-					    React.createElement("li", {value: "solved"}, "Number Solved")
-					  )
-					), 
 					
+					React.createElement("select", {className: "form-control dropdown", ref: "leaderDrop", onChange: this.handleChange}, 
+					  React.createElement("option", {value: "points"}, "Points"), 
+					  React.createElement("option", {value: "upvotes"}, "Upvotes"), 
+					  React.createElement("option", {value: "solved"}, "Number Solved")
+					), 
+
 					React.createElement("table", {className: "questionContainer table table-hover"}, 
 						React.createElement("tbody", null, 
 							React.createElement("tr", null, 

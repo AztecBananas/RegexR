@@ -34,6 +34,7 @@ var LeaderBoardView = React.createClass({
 
 	handleChange: function(e){
 		var selected = React.findDOMNode(this.refs.leaderDrop).value;
+		console.log(selected);
 		this.setState({scores:this.state.data[selected]});
 	},
 	render: function(){
@@ -58,20 +59,13 @@ var LeaderBoardView = React.createClass({
 			<div id='page-content-wrapper'>
         <div className='container-fluid'>
 				<h2> Leaderboard </h2>
-			
-				<div className="btn-group">
-				  <button type="button" className="btn btn-default">Filter By:</button>
-				  <button type="button" className="btn btn-default dropdown-toggle" data-toggle="dropdown">
-				    <span className="caret"></span>
-				    <span className="sr-only">Toggle Dropdown</span>
-				  </button>
-				  <ul className="dropdown-menu" ref="leaderDrop" onChange = {this.handleChange}>
-				    <li value = "points">Points</li>
-				    <li value = "upvotes">Upvotes</li>
-				    <li value = "solved">Number Solved</li>
-				  </ul>
-				</div>
 				
+				<select className="form-control dropdown" ref="leaderDrop" onChange={this.handleChange}>
+				  <option value = "points">Points</option>
+				  <option value = "upvotes">Upvotes</option>
+				  <option value = "solved">Number Solved</option>
+				</select>
+
 				<table className = "questionContainer table table-hover">
 					<tbody>
 						<tr >
