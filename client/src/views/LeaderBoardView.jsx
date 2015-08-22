@@ -44,11 +44,11 @@ var LeaderBoardView = React.createClass({
 			counter++;
 			return (
 				<tr key={score.username} className="question">
-					<td><b>{counter}</b></td>
-					<td><b>{score.username}</b></td>
-					<td><b>{score.points}</b></td>
-					<td><b>{score.questionsSolved}</b></td>
-					<td><b>{score.totalVotes}</b></td>
+					<td className="col-md-1 text-center"><b>{counter}</b></td>
+					<td className="col-md-2 text-center">{score.username}</td>
+					<td className="col-md-2 text-center">{score.points}</td>
+					<td className="col-md-2 text-center">{score.questionsSolved}</td>
+					<td className="col-md-2 text-center">{score.totalVotes}</td>
 				</tr>
 			)
 		});
@@ -59,20 +59,27 @@ var LeaderBoardView = React.createClass({
         <div className='container-fluid'>
 				<h2> Leaderboard </h2>
 			
-
-				<select ref="leaderDrop"  onChange = {this.handleChange} >
-					  <option  value = "points">Points</option>
-		  			<option  value = "upvotes">Upvotes</option>
-		  			<option  value = "solved">Solved</option>
-				</select>
-
+				<div className="btn-group">
+				  <button type="button" className="btn btn-default">Filter By:</button>
+				  <button type="button" className="btn btn-default dropdown-toggle" data-toggle="dropdown">
+				    <span className="caret"></span>
+				    <span className="sr-only">Toggle Dropdown</span>
+				  </button>
+				  <ul className="dropdown-menu" ref="leaderDrop" onChange = {this.handleChange}>
+				    <li value = "points">Points</li>
+				    <li value = "upvotes">Upvotes</li>
+				    <li value = "solved">Number Solved</li>
+				  </ul>
+				</div>
+				
 				<table className = "questionContainer table table-hover">
 					<tbody>
 						<tr >
-							<td><b>Username</b></td>
-							<td><b>Points</b></td>
-							<td><b>Questions Solved</b></td>
-							<td><b>Upvotes</b></td>
+							<th></th>
+							<th className="text-center">Username</th>
+							<th className="text-center">Points</th>
+							<th className="text-center">Questions Solved</th>
+							<th className="text-center">Upvotes</th>
 						</tr>
 						{scores}
 					</tbody>

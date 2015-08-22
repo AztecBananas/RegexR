@@ -48,10 +48,10 @@ var ProfileView = React.createClass({
         var questionTitle = this.props.questions[index.qNumber -1].title
         return ( 
             <tr>
-              <td>{questionTitle}</td>
-              <td>{index.solution}</td>
-              <td>{index.time}</td>
-              <td>{index.votes}</td>
+              <td className="col-md-3 text-padding">{questionTitle}</td>
+              <td className="col-md-3 text-padding">{index.solution}</td>
+              <td className="col-md-3 text-center">{index.time}</td>
+              <td className="col-md-3 text-center">{index.votes}</td>
             </tr>
           )
 
@@ -64,10 +64,10 @@ var ProfileView = React.createClass({
           <table className="questionContainer table table-hover">
           <thead> 
             <tr> 
-              <th>Question</th>
-              <th>Solution</th>
-              <th>Time Elasped</th>
-              <th>Votes</th>
+              <th className="text-center">Question</th>
+              <th className="text-center">Solution</th>
+              <th className="text-center">Time Elasped</th>
+              <th className="text-center">Votes</th>
             </tr> 
           </thead>
             <tbody> 

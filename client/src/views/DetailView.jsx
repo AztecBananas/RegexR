@@ -107,7 +107,11 @@ var DetailView = React.createClass({
 
   onReset: function() {
     this.setState({
-      reset: true
+      reset: true,
+      result: '',
+      solved: false,
+      hintNo: -1, 
+      showHint: false,
     });
   },
 
@@ -118,7 +122,7 @@ var DetailView = React.createClass({
     var question = this.props.questions[this.props.params.qNumber - 1];
     var data = {
       "qNumber": question.qNumber,
-      "points": question.points - this.state.pointDecrement,
+      "points": question.points - (this.state.pointDecrement < question.points-1 || question.points - 1),
       "solution": solution,
       "time": this.state.time
     }
@@ -168,12 +172,14 @@ var DetailView = React.createClass({
       <div id='page-content-wrapper'>
         <div className='container-fluid'>
           <div className="row">
-            <div className="col-lg-10">            
-              <h2>{question.title}<span className="points">Points: {question.points}</span></h2>
+            <div className="col-lg-9">            
+              <h2>{question.title}<span className="points">Max Points: {question.points}</span></h2>
             </div>
-            <div className="col-lg-2">
-              <Link to="questions" className="btn btn-primary back">Back</Link>
-              {!hasSolvedNextQuestion ? <Link to="question" onClick={this.onReset} params={{qNumber:nextQuestion}} className="btn btn-primary">Next Question</Link>: <Link to="solution" params={{qNumber:nextQuestion}} className="btn btn-success">Next Solution</Link>}
+            <div className="col-lg-3">
+              <div className="btn-group" role="group">
+                <Link to="questions" className="btn btn-default back">Back</Link>
+                {!hasSolvedNextQuestion ? <Link to="question" onClick={this.onReset} params={{qNumber:nextQuestion}} className="btn btn-primary">Next Question</Link>: <Link to="solution" params={{qNumber:nextQuestion}} className="btn btn-success">Next Solution</Link>}
+              </div>
             </div>
           </div>
 
@@ -181,34 +187,35 @@ var DetailView = React.createClass({
             <div className="col-lg-12"> 
               <p onChange={this.onRefresh}>{question.description}</p>
               <Timer stop={this.state.solved} reset={this.state.reset} callbackParent={this.onTimeChange}/>
+              {this.state.pointDecrement ? <div className="warning">-{this.state.pointDecrement} point deducted due to time elapsed</div> : null}
             </div>
           </div>
 
             <form className="form-inline text-center" onSubmit={this.handleSubmit}>
-              <span className="solution">/<textarea ref="solutionText" onChange={this.setRegex} rows="1" cols="50" type="text" className="regex form-control" placeholder="Regex solution..."></textarea>/</span>
+              <span className="input">/<textarea ref="solutionText" onChange={this.setRegex} rows="1" cols="50" type="text" className="regex form-control" placeholder="Regex solution..."></textarea>/</span>
                 {this.state.solved ? <p><button ref="submitButton" className="btn btn-success">{'Submit Solution'}</button></p> : null}
                 {this.state.solved === null ? <p className="error-msg">Please provide valid regular expression</p> : null}
                 {this.state.solved ? <h3 className="success">Success!!! Solved All Test Cases!</h3> : null}
-                {this.state.pointDecrement ? <h3 className="points">-{this.state.pointDecrement} was detected due to time elapsed</h3> : null}
             </form>
 
-            <div className="text-center"> 
-              <div className='btn btn-primary hints' onClick={this.countHint}>Hint</div>
-              <p></p>
+            <div className="hints text-center">
+              <div className='btn btn-info' onClick={this.countHint}>Hint</div>
               <p>{this.state.showHint ? this.displayHint() : null}</p>
             </div>
 
             <div className="test-cases">
 
               <p className="instruction">{'Make all words turn green to complete the challenge'}</p>
-              <div className="col-sm-6 text-center">
+              <div className="col-sm-2"></div>
+              <div className="col-sm-4 text-center">
                 <h3>{'Should match'}</h3>
                 {this.displayTestCases('truthy', true)}
               </div>
-              <div className="col-sm-6 text-center">
+              <div className="col-sm-4 text-center">
                 <h3>{'Should not match'}</h3>
                 {this.displayTestCases('falsy', false)}
               </div>
+              <div className="col-sm-2"></div>
             </div>  
         </div>
       </div>
